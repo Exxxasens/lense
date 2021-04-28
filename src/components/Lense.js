@@ -194,21 +194,6 @@ const Lense = ({ type }) => {
         }
     }
 
-    /*
-    
-    // add button event listeners
-    document.getElementById("plus").addEventListener("click", function(){
-        scale /= scaleMultiplier;
-        draw(scale, translatePos);
-    }, false);
-    
-    document.getElementById("minus").addEventListener("click", function(){
-        scale *= scaleMultiplier;
-        draw(scale, translatePos);
-    }, false);
-    
-    */
-
     const handleMouseDown = (e) => {
         const x = e.clientX - translatePos.x;
         const y = e.clientY - translatePos.y
