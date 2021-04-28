@@ -11,17 +11,24 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
+
+* {
+    box-sizing: border-box;
+}
+
 .app {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 .content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 .content .btn-wrapper {
     display: flex;

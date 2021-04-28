@@ -195,6 +195,7 @@ const Lense = ({ type }) => {
     }
 
     const handleMouseDown = (e) => {
+        e.preventDefault();
         const x = e.clientX - translatePos.x;
         const y = e.clientY - translatePos.y
         setDragOffset({ x, y });
@@ -246,25 +247,31 @@ const Lense = ({ type }) => {
         const focusAbs = Math.abs(focus);
         const itemPos = Math.abs(itemPosition.x);
 
-        if (itemPos === focusAbs) {
-            return setImageDescription('Изображение отсутствует');
+        if (type === COLLECTING) {
+            if (itemPos === focusAbs) {
+                return setImageDescription('Изображение отсутствует');
+            }
+    
+            if (itemPos === 2 * focusAbs) {
+                return setImageDescription('Изображение действительное, перевернутое, равное');
+            }
+    
+            if (itemPos > focusAbs && itemPos < 2 * focusAbs) {
+                return setImageDescription('Изображение действительное, перевернутое, увеличенное');
+            }
+    
+            if (itemPos > 2 * focusAbs) {
+                return setImageDescription('Изображение действительное, перевёрнутое, уменьшенное');
+            }
+    
+            if (itemPos < focusAbs) {
+                return setImageDescription('Изображение мнимое, прямое, увеличенное');
+            } 
         }
 
-        if (itemPos === 2 * focusAbs) {
-            return setImageDescription('Изображение действительное, перевернутое, равное');
+        if (type === DIFFUSING) {
+            return setImageDescription('Изображение мнимое, прямое, уменьшенное');
         }
-
-        if (itemPos > focusAbs && itemPos < 2 * focusAbs) {
-            return setImageDescription('Изображение действительное, перевернутое, увеличенное');
-        }
-
-        if (itemPos > 2 * focusAbs) {
-            return setImageDescription('Изображение действительное, перевёрнутое, уменьшенное');
-        }
-
-        if (itemPos < focusAbs) {
-            return setImageDescription('Изображение мнимое, прямое, увеличенное')
-        } 
  
     }
 
@@ -275,8 +282,7 @@ const Lense = ({ type }) => {
             drawFocus(ctx);
         }
 
-        if (itemPosition && type === COLLECTING) {
-            // рисуем предмет
+        if (itemPosition) {
             ctx.lineWidth = 2;
             drawItem(ctx, itemPosition);
             ctx.lineWidth = 1;
@@ -287,9 +293,16 @@ const Lense = ({ type }) => {
             ctx.closePath();
 
             ctx.strokeStyle = '#FF5F3C';
+        }
+
+        if (itemPosition && type === COLLECTING && focus) {
+            // рисуем предмет
 
             const eq1 = drawInfiniteLine(ctx, { x: 0, y: 0 }, itemPosition);
-            const eq2 = drawInfiniteLine(ctx, { x: 0, y: itemPosition.y }, { y: 0, x: -focus });
+
+            let oppositeFocus = -Math.abs(focus) * Math.sign(itemPosition.x);
+
+            const eq2 = drawInfiniteLine(ctx, { x: 0, y: itemPosition.y }, { y: 0, x: oppositeFocus });
             const { x, y } = getInterception(eq1, eq2);
 
             if (Math.abs(focus) > Math.abs(itemPosition.x)) {
@@ -308,15 +321,53 @@ const Lense = ({ type }) => {
             ctx.lineWidth = 2;
             ctx.strokeStyle = '#3C63FF';
             ctx.fillStyle = '#3C63FF';
+
             drawItem(ctx, { x, y });
+
             ctx.lineWidth = 1;
             generateImageDescription();
         }
 
-        if (itemPosition && type === DIFFUSING) {
+        if (itemPosition && type === DIFFUSING && focus) {
+            console.log('diffusing lense');
 
+            // построить линию, проходящую от предмета до начала координат
 
+            const eq1 = drawInfiniteLine(ctx, { x: 0, y: 0 }, itemPosition);
 
+            // простроить горизонтальную линию от предмета до начала координат (x = 0)
+            ctx.beginPath();
+            ctx.moveTo(0, itemPosition.y);
+            ctx.lineTo(itemPosition.x, itemPosition.y);
+            ctx.stroke();
+
+            let currentFocus = Math.abs(focus) * Math.sign(itemPosition.x);
+
+            const eq2 = drawInfiniteLine(ctx, { x: 0, y: itemPosition.y }, { y: 0, x: currentFocus });
+
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(5 * scale), Math.round(5 * scale)]);
+            ctx.moveTo(0, itemPosition.y);
+            const offsetX = (translatePos.x) / scale;
+            const rightSide = width + offsetX;
+            ctx.lineTo(rightSide, eq2.slope * rightSide + eq2.intercept);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // получаем пересечение
+
+            const { x, y } = getInterception(eq1, eq2);
+
+            // построить объект и добавить описание.
+            
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#3C63FF';
+            ctx.fillStyle = '#3C63FF';
+
+            drawItem(ctx, { x, y });
+            
+            ctx.lineWidth = 1;
+            generateImageDescription();
         }
 
     }
