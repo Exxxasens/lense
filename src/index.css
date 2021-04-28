@@ -1,13 +1,87 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content .btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lense {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.controls {
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls .title {
+    margin-top: 0.5rem;
+}
+
+.btn {
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+}
+
+.inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+.inline .btn-wrapper {
+    margin-right: 0.5rem;
+}
+.inline .btn-wrapper:last-of-type {
+    margin: 0;
+}
+.inc-btn, .dec-btn {
+    height: 1.5rem;
+    width: 1.5rem;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+}
+
+
+
+canvas {
+    border: 1px solid #aaa;
 }
