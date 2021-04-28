@@ -124,13 +124,14 @@ const Lense = ({ type }) => {
         function getX(y) { 
             return (y - intercept) / slope; 
         }
+
         ctx.beginPath();
         ctx.moveTo(getX(0), 0);
         ctx.lineTo(point1.x, point1.y);
         ctx.lineTo(point2.x, point2.y);
 
-        const offsetY = (translatePos.y) / scale;
-        const offsetX = (translatePos.x) / scale;
+        let offsetY = (translatePos.y) / scale;
+        let offsetX = (translatePos.x) / scale;
 
         if (itemPosition.x > 0 && itemPosition.y > 0) {
             ctx.lineTo(-width - offsetX, getY(-width - offsetX));
@@ -141,11 +142,10 @@ const Lense = ({ type }) => {
         }
 
         if (itemPosition.x < 0 && itemPosition.y < 0) {
-            ctx.lineTo(getX(height + offsetY), height + offsetY);
+            ctx.lineTo(getX((height / scale) - offsetY), (height / scale) - offsetY);
         }
 
         if (itemPosition.x < 0 && itemPosition.y > 0) {
-            console.log('4')
             ctx.lineTo(getX(-height - offsetY), -height - offsetY);
         }
 
@@ -185,8 +185,12 @@ const Lense = ({ type }) => {
                 x = 2 * Math.abs(focus) * Math.sign(x);
             }
 
-            if (Math.abs(y) > Math.abs(height)) {
-                y = (y > 0) ? height : -height;
+            if (y < -height) {
+                y = -height;
+            }
+
+            if (y > 0) {
+                y = -y;
             }
 
             setItemPosition({ x, y });
@@ -234,7 +238,6 @@ const Lense = ({ type }) => {
     }
 
     const handleScroll = (e) => {
-        console.log(e.wheelDelta);
         if (e.wheelDelta > 0) {
             return setScale(s => s / 0.8);
         }
@@ -329,8 +332,6 @@ const Lense = ({ type }) => {
         }
 
         if (itemPosition && type === DIFFUSING && focus) {
-            console.log('diffusing lense');
-
             // построить линию, проходящую от предмета до начала координат
 
             const eq1 = drawInfiniteLine(ctx, { x: 0, y: 0 }, itemPosition);
